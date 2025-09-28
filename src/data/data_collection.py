@@ -42,7 +42,8 @@ def save_data(df : pd.DataFrame, filepath: str) -> None:
     
 
 def main():
-    data_filepath = "https://raw.githubusercontent.com/odubajo/ML_pipeline/refs/heads/main/water_potability.csv"
+    #data_filepath = r"C:\Users\SFL-3\water_potability.csv"
+    data_filepath = "https://raw.githubusercontent.com/PriyangBhattDS/dataset/refs/heads/main/water_potability.csv"
     params_filepath = "params.yaml"
     raw_data_path = os.path.join("data","raw")
 # data_path = os.path.join("data","raw")
