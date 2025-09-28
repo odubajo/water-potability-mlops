@@ -12,29 +12,34 @@ import mlflow.sklearn
 import dagshub
 import mlflow
 from mlflow.models import infer_signature
+
+# Initialize DagsHub for experiment tracking
+# import dagshub
+# dagshub.init(repo_owner='bhattpriyang', repo_name='ci_test', mlflow=True)
+# mlflow.set_experiment("Final_model")
+# mlflow.set_tracking_uri("https://dagshub.com/bhattpriyang/ci_test.mlflow")
+
+# import dagshub
+# dagshub.init(repo_owner='bhattpriyang', repo_name='CI_MLOPS', mlflow=True)
+# mlflow.set_experiment("Final_model")
+
 import os
-# Set up DagsHub credentials for MLflow tracking
-dagshub_token = os.getenv("DAGSHUB_PAT")
+# Load DagsHub token from environment variables
+dagshub_token = os.getenv("DAGSHUB_TOKEN")
 if not dagshub_token:
-    raise EnvironmentError("DAGSHUB_PAT environment variable is not set")
+    raise EnvironmentError("DAGSHUB_TOKEN environment variable is not set")
 
 os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
 os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
 
+# DagsHub repository details
 dagshub_url = "https://dagshub.com"
-repo_owner = ""
-repo_name = ""
+repo_owner='odubajo'
+repo_name='water-potability-mlops', 
 
-# Set the tracking URI for MLflow to log the experiment in DagsHub
-mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}.mlflow') 
-# Initialize DagsHub for experiment tracking
-# Initialize DagsHub for experiment tracking
+mlflow.set_tracking_uri(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
+mlflow.set_experiment("Final_model")
 
-# Set the experiment name in MLflow
-
-mlflow.set_experiment("DVC PIPELINE ")
-
-#mlflow.set_experiment("water-potability-prediction")
 
 def load_data(filepath: str) -> pd.DataFrame:
     try:
@@ -95,6 +100,7 @@ def evaluation_model(model, X_test: pd.DataFrame, y_test: pd.Series, model_name:
         mlflow.log_artifact(cm_path)
         
         # Log the model
+        mlflow.sklearn.log_model(model, model_name.replace(' ', '_'))
 
         metrics_dict = {
             'accuracy': acc,
@@ -118,7 +124,7 @@ def main():
         test_data_path = "./data/processed/test_processed.csv"
         model_path = "models/model.pkl"
         metrics_path = "reports/metrics.json"
-        model_name = "Best Model"
+        model_name = "Random Forest Classifier"
 
         test_data = load_data(test_data_path)
         X_test, y_test = prepare_data(test_data)
@@ -140,7 +146,7 @@ def main():
 
             mlflow.sklearn.log_model(model,"Best Model",signature=signature)
 
-            #Save run ID and model info to JSON File
+             # Save run ID and model info to JSON
             run_info = {'run_id': run.info.run_id, 'model_name': "Best Model"}
             reports_path = "reports/run_info.json"
             with open(reports_path, 'w') as file:
