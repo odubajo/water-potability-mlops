@@ -32,12 +32,10 @@ if not dagshub_token:
 os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
 os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
 
-# DagsHub repository details
-dagshub_url = "https://dagshub.com"
-repo_owner='odubajo'
-repo_name='water-potability-mlops', 
+# This single line handles authentication and sets the tracking URI automatically
+dagshub.init(repo_owner='odubajo', repo_name='water-potability-mlops', mlflow=True)
 
-mlflow.set_tracking_uri(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
+# Now just set the experiment name
 mlflow.set_experiment("Final_model")
 
 
