@@ -7,7 +7,7 @@ dagshub.init(repo_owner='odubajo', repo_name='water-potability-mlops', mlflow=Tr
 
 # Set the experiment name in MLflow
 
-mlflow.set_experiment("Finalllmodel")
+mlflow.set_experiment("Final_model")
 
 # Set the tracking URI for MLflow to log the experiment in DagsHub
 
