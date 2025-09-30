@@ -26,3 +26,14 @@ jobs:
         run: |
           # Directly run the DVC pipeline without pulling
           dvc repro
+      - name: Run model tests
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        run: |
+          python -m unittest tests/model_test.py
+      - name: Promote model to production
+        if: success()
+        env:
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        run: python scripts/production.py
+        
